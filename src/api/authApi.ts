@@ -1,6 +1,6 @@
 import api from '../lib/api'
 import axios from 'axios'
-import type { LoginType, RegisterResponse, RegisterType } from '../types'
+import type { LoginType, RegisterResponse, RegisterType ,LoginResponseType} from '../types'
 
 export const register = async (
   payload: RegisterType
@@ -17,17 +17,26 @@ export const register = async (
   }
 }
 
-export const login = async (payload: LoginType) => {
+export const login = async (payload: LoginType): Promise<LoginResponseType> => {
   try {
-    const response = await api.post('/auth/login', payload)
+    const response = await api.post<LoginResponseType>('/auth/login', payload)
     return response.data
-  } catch (error: any) {
-    console.error('Login error:', error?.response?.data || error.message)
-    throw new Error(
-      error?.response?.data?.message || 'Login failed. Please try again.'
-    )
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      console.error('Login error:', error.response?.data)
+      throw new Error(
+        (error.response?.data as { message?: string })?.message || 'Login failed. Please try again.'
+      )
+    } else if (error instanceof Error) {
+      console.error('Login error:', error.message)
+      throw new Error(error.message)
+    } else {
+      console.error('Login error: Unknown error', error)
+      throw new Error('Login failed. Please try again.')
+    }
   }
 }
+
 
 export const fetchme = async () => {
   const endpoint = 'auth/me'

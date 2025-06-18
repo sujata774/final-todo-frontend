@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useAuthStore } from '../store/useAuthStore'
-import { Button } from './ui/Button'
+import { Button } from './ui/button'
 
 const Header = () => {
   const { user, logout, fetchCurrentUser } = useAuthStore()

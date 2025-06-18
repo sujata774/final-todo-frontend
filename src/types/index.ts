@@ -1,5 +1,3 @@
-
-
 export type RegisterType = {
   name: string
   phone: number
@@ -66,4 +64,14 @@ export type TodoFormValues = {
   text: string
   completed: boolean
   _id?: string
+}
+
+export interface LoginResponseType {
+  token: string
+  message: string
+  user: {
+    id: string
+    name: string
+    phone: string
+  }
 }

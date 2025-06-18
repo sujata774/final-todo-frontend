@@ -24,6 +24,12 @@ type TodoStore = {
   clearCompleted: () => void
 }
 
+function getErrorMessage(error: unknown): string {
+  if (error instanceof Error) return error.message
+  if (typeof error === 'string') return error
+  return 'Unknown error'
+}
+
 export const useTodoStore = create<TodoStore>((set) => ({
   todos: [],
   loading: false,
@@ -34,8 +40,8 @@ export const useTodoStore = create<TodoStore>((set) => ({
     try {
       const res = await getTodos()
       set({ todos: res.data, loading: false })
-    } catch (err: any) {
-      const message = err.message || 'Failed to fetch todos'
+    } catch (error: unknown) {
+      const message = getErrorMessage(error)
       toast.error(message)
       set({ error: message, loading: false })
     }
@@ -50,8 +56,8 @@ export const useTodoStore = create<TodoStore>((set) => ({
         loading: false,
       }))
       toast.success('Todo created successfully!')
-    } catch (err: any) {
-      const message = err.message || 'Failed to create todo'
+    } catch (error: unknown) {
+      const message = getErrorMessage(error)
       toast.error(message)
       set({ error: message, loading: false })
     }
@@ -68,8 +74,8 @@ export const useTodoStore = create<TodoStore>((set) => ({
         loading: false,
       }))
       toast.success('Todo updated successfully!')
-    } catch (err: any) {
-      const message = err.message || 'Failed to update todo'
+    } catch (error: unknown) {
+      const message = getErrorMessage(error)
       toast.error(message)
       set({ error: message, loading: false })
     }
@@ -84,8 +90,8 @@ export const useTodoStore = create<TodoStore>((set) => ({
         loading: false,
       }))
       toast.success('Todo deleted successfully!')
-    } catch (err: any) {
-      const message = err.message || 'Failed to delete todo'
+    } catch (error: unknown) {
+      const message = getErrorMessage(error)
       toast.error(message)
       set({ error: message, loading: false })
     }
